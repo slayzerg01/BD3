@@ -1,7 +1,8 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5 import uic
-from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+from PyQt5.QtSql import QSqlDatabase
+from GPPForm import GPPForm
 import sys
 
 
@@ -11,6 +12,11 @@ class mainWindow(QtWidgets.QMainWindow):
         super(mainWindow, self).__init__()
         uic.loadUi("./ui/mainWindow.ui", self)
         self.db_init()
+        self.pushButtonGPP.clicked.connect(self.GPP)
+
+    def GPP(self):
+        self.GPP = GPPForm()
+        self.GPP.show()
 
     def db_init(self):
         self.db = QSqlDatabase().addDatabase("QMYSQL")
@@ -26,13 +32,6 @@ class mainWindow(QtWidgets.QMainWindow):
         print(self.db.driverName())
         print(self.db.tables())
         print(self.db.databaseName())
-        query = QSqlQuery(self.db)
-        query.prepare(u"SELECT * FROM proverka")
-        s = query.exec_()
-        print(s)
-        while query.next():
-            print(query.value(1))
-        print(s)
 
 
 def main():
