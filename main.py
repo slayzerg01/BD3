@@ -12,7 +12,6 @@ class mainWindow(QMainWindow):
         uic.loadUi("./ui/mainWindow.ui", self)
         self.db_init()
         self.GPPForm = None
-
         self.pushButtonGPP.clicked.connect(self.GPP_clk)
 
     def GPP_clk(self):
@@ -27,13 +26,13 @@ class mainWindow(QMainWindow):
         self.db.setUserName("root")
         self.db.setPassword("qwerty123")
         if not self.db.open():
-            QMessageBox.critical(self, "Ошибка!", "Соединение с БД не установлено", QMessageBox.Ok)
-            print(self.db.lastError().text())
+            QMessageBox.critical(self, "Ошибка!", self.db.lastError().text(), QMessageBox.Ok)
 
         print(self.db.isOpen())
         print(self.db.driverName())
         print(self.db.tables())
         print(self.db.databaseName())
+
 
 def main():
     app = QApplication(sys.argv)
