@@ -20,6 +20,10 @@ class mainWindow(QMainWindow):
         self.tV_besedi.setItemDelegateForColumn(3, QtSql.QSqlRelationalDelegate(self.tV_besedi))
         self.tV_besedi.setItemDelegateForColumn(4, QtSql.QSqlRelationalDelegate(self.tV_besedi))
         self.pushButtonProv.clicked.connect(self.Prov_clk)
+        self.pushButtonBes.clicked.connect(self.Bes_clk)
+
+    def Bes_clk(self):
+        self.stackedWidget.setCurrentWidget(self.page_1)
 
     def Prov_clk(self):
         self.stackedWidget.setCurrentWidget(self.page_2)
