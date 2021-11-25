@@ -1,22 +1,24 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
 from PyQt5 import uic
 from PyQt5.QtSql import QSqlDatabase
-from GPPForm import GPPForm
 import sys
+from GPPForm import GPPForm
 
 
-class mainWindow(QtWidgets.QMainWindow):
+class mainWindow(QMainWindow):
 
     def __init__(self):
         super(mainWindow, self).__init__()
         uic.loadUi("./ui/mainWindow.ui", self)
         self.db_init()
-        self.pushButtonGPP.clicked.connect(self.GPP)
+        self.GPPForm = None
 
-    def GPP(self):
-        self.GPP = GPPForm()
-        self.GPP.show()
+        self.pushButtonGPP.clicked.connect(self.GPP_clk)
+
+    def GPP_clk(self):
+        if self.GPPForm is None:
+            self.GPPForm = GPPForm()
+        self.GPPForm.show()
 
     def db_init(self):
         self.db = QSqlDatabase().addDatabase("QMYSQL")
@@ -32,7 +34,6 @@ class mainWindow(QtWidgets.QMainWindow):
         print(self.db.driverName())
         print(self.db.tables())
         print(self.db.databaseName())
-
 
 def main():
     app = QApplication(sys.argv)
