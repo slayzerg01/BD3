@@ -14,13 +14,9 @@ class GPPForm(QDialog):
         self.pB_add.clicked.connect(self.add_data)
         self.pB_remove.clicked.connect(self.remove_data)
         self.tVGPP.doubleClicked.connect(self.edit_data)
-        self.model.setHeaderData(1, QtCore.Qt.Horizontal, "ФИО")
-        self.model.setHeaderData(2, QtCore.Qt.Horizontal, "Должность")
-        self.model.setHeaderData(3, QtCore.Qt.Horizontal, "Образование")
-        self.model.setHeaderData(4, QtCore.Qt.Horizontal, "Адрес")
-        self.model.setHeaderData(5, QtCore.Qt.Horizontal, "Номер тел.")
+
         self.tVGPP.hideColumn(0)
-        #self.tVGPP.verticalHeader().setVisible(False)
+        # self.tVGPP.verticalHeader().setVisible(False)
         self.tVGPP.resizeColumnsToContents()
 
     def remove_data(self):
@@ -42,6 +38,10 @@ class GPPForm(QDialog):
         self.GPP_edit.lE_Num.setText(self.model.record(cur_row).value("phone_number"))
         if self.GPP_edit.exec_():
             self.model.setData(self.model.index(cur_row, 1), self.GPP_edit.lE_FIO.text())
+            self.model.setData(self.model.index(cur_row, 2), self.GPP_edit.lE_Pos.text())
+            self.model.setData(self.model.index(cur_row, 3), self.GPP_edit.lE_Edu.text())
+            self.model.setData(self.model.index(cur_row, 4), self.GPP_edit.lE_Adr.text())
+            self.model.setData(self.model.index(cur_row, 5), self.GPP_edit.lE_Num.text())
 
     def add_data(self):
         self.GPP_edit = GPP_edit()
@@ -55,12 +55,16 @@ class GPPForm(QDialog):
             record.setValue("phone_number", self.GPP_edit.lE_Num.text())
             self.model.insertRecord(-1, record)
 
-
     def load_table(self):
         self.model = QtSql.QSqlTableModel(self)
         self.model.setTable("sotr_gpp")
         self.model.setEditStrategy(QtSql.QSqlTableModel.OnManualSubmit)
         print(self.model.select())
+        self.model.setHeaderData(1, QtCore.Qt.Horizontal, "ФИО")
+        self.model.setHeaderData(2, QtCore.Qt.Horizontal, "Должность")
+        self.model.setHeaderData(3, QtCore.Qt.Horizontal, "Образование")
+        self.model.setHeaderData(4, QtCore.Qt.Horizontal, "Адрес")
+        self.model.setHeaderData(5, QtCore.Qt.Horizontal, "Номер тел.")
 
     def save_changes(self):
         self.model.submitAll()

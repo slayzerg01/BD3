@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QMessageBox, QMainWindow
-from PyQt5 import uic
+from PyQt5 import uic, QtSql, QtCore
 from PyQt5.QtSql import QSqlDatabase
 import sys
 from GPPForm import GPPForm
@@ -12,7 +12,17 @@ class mainWindow(QMainWindow):
         uic.loadUi("./ui/mainWindow.ui", self)
         self.db_init()
         self.GPPForm = None
+        self.besedi_init()
         self.pushButtonGPP.clicked.connect(self.GPP_clk)
+        self.tV_besedi.setModel(self.model_besedi)
+        self.tV_besedi.hideColumn(self.model_besedi.fieldIndex("id_besedi"))
+        self.tV_besedi.resizeColumnsToContents()
+        self.tV_besedi.setItemDelegateForColumn(3, QtSql.QSqlRelationalDelegate(self.tV_besedi))
+        self.tV_besedi.setItemDelegateForColumn(4, QtSql.QSqlRelationalDelegate(self.tV_besedi))
+        self.pushButtonProv.clicked.connect(self.Prov_clk)
+
+    def Prov_clk(self):
+        self.stackedWidget.setCurrentWidget(self.page_2)
 
     def GPP_clk(self):
         if self.GPPForm is None:
@@ -28,10 +38,17 @@ class mainWindow(QMainWindow):
         if not self.db.open():
             QMessageBox.critical(self, "Ошибка!", self.db.lastError().text(), QMessageBox.Ok)
 
-        print(self.db.isOpen())
-        print(self.db.driverName())
-        print(self.db.tables())
-        print(self.db.databaseName())
+    def besedi_init(self):
+        self.model_besedi = QtSql.QSqlRelationalTableModel(self)
+        self.model_besedi.setTable("besedi")
+        self.model_besedi.setEditStrategy(QtSql.QSqlTableModel.OnFieldChange)
+        self.model_besedi.setRelation(3, QtSql.QSqlRelation("sotr_gpp", "id_sotr_GPP", "FIO"))
+        self.model_besedi.setRelation(4, QtSql.QSqlRelation("themes", "id_themes", "name"))
+        self.model_besedi.select()
+        self.model_besedi.setHeaderData(1, QtCore.Qt.Horizontal, "Дата беседы")
+        self.model_besedi.setHeaderData(2, QtCore.Qt.Horizontal, "Охват")
+        self.model_besedi.setHeaderData(3, QtCore.Qt.Horizontal, "Сотрудник ГПП")
+        self.model_besedi.setHeaderData(4, QtCore.Qt.Horizontal, "Тема беседы")
 
 
 def main():

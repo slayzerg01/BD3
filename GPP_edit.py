@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QDialog
-from PyQt5 import uic, QtSql
+from PyQt5 import uic
 
 
 class GPP_edit(QDialog):
